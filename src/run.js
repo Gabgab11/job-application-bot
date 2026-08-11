@@ -85,17 +85,19 @@ async function submitQueued() {
   const remaining = Math.max(0, DAILY_APPLY_TARGET - alreadyApplied);
   if (remaining === 0) {
     console.log('Daily apply target already reached');
-    return { applied: 0, skipped: 0, failed: 0 };
+    return { applied: [], skipped: [], failed: [] };
   }
 
   const pending = await getPendingApplications(remaining);
-  let applied = 0, skipped = 0, failed = 0;
+  const applied = [];
+  const skipped = [];
+  const failed = [];
 
   for (const app of pending) {
     const job = app.jobs;
     if (job.ats_type !== 'greenhouse') {
       await updateApplication(app.id, { status: 'skipped_manual_ats' });
-      skipped++;
+      skipped.push({ title: job.title, company: job.company, apply_url: job.apply_url });
       continue;
     }
 
@@ -105,13 +107,13 @@ async function submitQueued() {
     if (result.status === 'submitted') {
       await updateApplication(app.id, { status: 'submitted', applied_at: new Date().toISOString() });
       await notifyApplied(job).catch((e) => console.error('notify failed', e));
-      applied++;
+      applied.push({ title: job.title, company: job.company });
     } else if (result.status === 'blocked_auth_question') {
       await updateApplication(app.id, { status: 'skipped_manual_ats', fail_reason: result.reason });
-      skipped++;
+      skipped.push({ title: job.title, company: job.company, apply_url: job.apply_url });
     } else {
       await updateApplication(app.id, { status: 'failed', fail_reason: result.reason });
-      failed++;
+      failed.push({ title: job.title, company: job.company, reason: result.reason });
     }
   }
   return { applied, skipped, failed };
@@ -126,8 +128,8 @@ async function main() {
 
   await discoverAndFilter();
   const { applied, skipped, failed } = await submitQueued();
-  await notifyDailySummary({ appliedCount: applied, skippedCount: skipped, failedCount: failed });
-  console.log(`Run complete. Applied: ${applied}, Skipped: ${skipped}, Failed: ${failed}`);
+  await notifyDailySummary({ applied, skipped, failed });
+  console.log(`Run complete. Applied: ${applied.length}, Skipped: ${skipped.length}, Failed: ${failed.length}`);
 }
 
 main().catch((err) => {
