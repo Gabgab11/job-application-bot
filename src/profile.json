@@ -1,0 +1,54 @@
+{
+  "name": "Gabriel A Uji",
+  "headline": "Telesales, Customer Support & Collections Specialist",
+  "location": "Cairo, Egypt",
+  "phone": "011-051-87885",
+  "email": "Gabrieliyanu2014@gmail.com",
+  "languages": ["English (Fluent)", "French (Conversational)", "Tagalog (Basic)"],
+  "education": [
+    {
+      "school": "Obafemi Awolowo University (OAU)",
+      "degree": "Bachelor of Business Management",
+      "years": "2012-2016",
+      "gpa": "3.8/4.0"
+    }
+  ],
+  "skills": [
+    "Delinquency & Default Management",
+    "Promise-to-Pay (PTP) Tracking",
+    "CRM Systems (multi-platform)",
+    "Payment Negotiations",
+    "Debt Settlement Techniques",
+    "Customer Retention",
+    "High-Volume Outbound/Inbound Support",
+    "Time Management",
+    "Leadership"
+  ],
+  "summary": "Results-oriented Customer Support, Telesales, and Collections Specialist with 5+ years of experience across credit control, outbound sales, and high-volume customer operations. Strong record of reducing delinquencies, improving retention, and exceeding KPIs using CRM tools and structured payment-negotiation processes.",
+  "experience": [
+    {
+      "company": "Quadra Plus Training Institute",
+      "location": "Dubai",
+      "title": "Customer Service Executive",
+      "years": "2020-2023",
+      "bullets": [
+        "Delivered customer support via phone, email, and chat to prospective and existing clients across multiple academic programs.",
+        "Maintained records of transactions and assisted the finance department with reconciliation processes.",
+        "Used CRM systems to manage client inquiries, follow-ups, and payment reminders."
+      ]
+    },
+    {
+      "company": "HSBC Bank",
+      "location": "Dubai",
+      "title": "Customer Support & Collections Assistant",
+      "years": "2017-2020",
+      "bullets": [
+        "Negotiated repayment plans and settlements with cardholders.",
+        "Processed payments and updated account records in CRM systems.",
+        "Ensured compliance with HSBC credit policies and UAE financial regulations.",
+        "Maintained daily collection targets and contributed to team recovery goals."
+      ]
+    }
+  ],
+  "note_on_use": "IT Manager role (Nexum Group, 2024-2026) exists on the source CV but is out of scope — bot is targeting customer support / telesales / collections roles only, per instruction."
+}

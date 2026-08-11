@@ -1,0 +1,21 @@
+{
+  "name": "job-application-bot",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/run.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@supabase/supabase-js": "^2.45.4",
+    "fast-xml-parser": "^4.5.0",
+    "playwright": "^1.48.2",
+    "resend": "^4.0.1"
+  },
+  "description": "Discovers remote customer support / telesales / collections roles open to candidates outside the US and Canada, filters out anything requiring US work authorization, tailors a resume summary + note per job with Claude, auto-submits on Greenhouse-hosted postings, and emails a confirmation per application. Everything else routes to skipped_manual_ats instead of guessing. Runs entirely on GitHub Actions (free) + Supabase (free) + Resend (free tier).",
+  "license": "ISC"
+}
