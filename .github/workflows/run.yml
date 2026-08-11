@@ -2,7 +2,10 @@ name: Job application bot
 
 on:
   schedule:
-    - cron: '0 7 * * *'
+    # Every 6 hours - free on GitHub Actions (unlike Vercel's Hobby plan,
+    # there's no once-per-day restriction here). Catches new postings
+    # sooner and gives more chances per day.
+    - cron: '0 */6 * * *'
   workflow_dispatch: {}
 
 jobs:
