@@ -9,6 +9,8 @@ import { fetchJobicyJobs } from './sources/jobicy.js';
 import { checkEligibility, matchesRole } from './eligibility.js';
 import { semanticEligibilityCheck, tailorApplication } from './tailor.js';
 import { detectAtsType, submitGreenhouse } from './submit.js';
+import { submitLever } from './submit-lever.js';
+import { submitAshby } from './submit-ashby.js';
 import { notifyApplied, notifyDailySummary } from './notify.js';
 import {
   getSystemStatus,
@@ -25,6 +27,14 @@ const profile = JSON.parse(readFileSync(path.join(__dirname, 'profile.json'), 'u
 
 const DAILY_APPLY_TARGET = Number(process.env.DAILY_APPLY_TARGET || 6);
 const MAX_SEMANTIC_CHECKS_PER_RUN = 15; // cost/time control on the Claude calls
+
+// One entry per ATS we can actually auto-fill. Anything else falls through
+// to skipped_manual_ats instead of being guessed at.
+const SUBMITTERS = {
+  greenhouse: submitGreenhouse,
+  lever: submitLever,
+  ashby: submitAshby,
+};
 
 async function discoverAndFilter() {
   const [himalayas, remoteok, wwr, jobicy] = await Promise.all([
@@ -97,14 +107,16 @@ async function submitQueued() {
 
   for (const app of pending) {
     const job = app.jobs;
-    if (job.ats_type !== 'greenhouse') {
+    const submitFn = SUBMITTERS[job.ats_type];
+
+    if (!submitFn) {
       await updateApplication(app.id, { status: 'skipped_manual_ats' });
       skipped.push({ title: job.title, company: job.company, apply_url: job.apply_url });
       continue;
     }
 
     const tailored = { cover_note: app.tailored_note };
-    const result = await submitGreenhouse(job, profile, tailored);
+    const result = await submitFn(job, profile, tailored);
 
     if (result.status === 'submitted') {
       await updateApplication(app.id, { status: 'submitted', applied_at: new Date().toISOString() });
