@@ -57,8 +57,16 @@ Return ONLY a JSON object, no other text:
   });
   const text = msg.content.find((b) => b.type === 'text')?.text || '{}';
   try {
-    return JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || '{}');
+    const parsed = JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || '{}');
+    if (!parsed.resume_summary) throw new Error('missing resume_summary');
+    return parsed;
   } catch {
-    return null;
+    // Don't let a parse failure leave this application stuck in limbo -
+    // fall back to the profile's own summary so it still gets queued.
+    return {
+      resume_summary: profile.summary,
+      cover_note: null,
+      parse_failed: true,
+    };
   }
 }
