@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { fetchHimalayasJobs } from './sources/himalayas.js';
 import { fetchRemoteOkJobs } from './sources/remoteok.js';
 import { fetchWwrJobs } from './sources/wwr.js';
+import { fetchJobicyJobs } from './sources/jobicy.js';
 import { checkEligibility, matchesRole } from './eligibility.js';
 import { semanticEligibilityCheck, tailorApplication } from './tailor.js';
 import { detectAtsType, submitGreenhouse } from './submit.js';
@@ -26,12 +27,13 @@ const DAILY_APPLY_TARGET = Number(process.env.DAILY_APPLY_TARGET || 6);
 const MAX_SEMANTIC_CHECKS_PER_RUN = 15; // cost/time control on the Claude calls
 
 async function discoverAndFilter() {
-  const [himalayas, remoteok, wwr] = await Promise.all([
+  const [himalayas, remoteok, wwr, jobicy] = await Promise.all([
     fetchHimalayasJobs().catch(() => []),
     fetchRemoteOkJobs().catch(() => []),
     fetchWwrJobs().catch(() => []),
+    fetchJobicyJobs().catch(() => []),
   ]);
-  const allJobs = [...himalayas, ...remoteok, ...wwr];
+  const allJobs = [...himalayas, ...remoteok, ...wwr, ...jobicy];
   console.log(`Discovered ${allJobs.length} raw listings across sources`);
 
   let semanticChecksUsed = 0;
